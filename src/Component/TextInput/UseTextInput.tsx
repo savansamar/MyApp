@@ -54,6 +54,7 @@ const UseTextInput:React.FC<TextInputBox> = React.memo((props) => {
             style={styles.textInput}
             value={props.value}
             onChangeText={props.onChangeText}
+            keyboardType='number-pad'
           />
         </View>
       

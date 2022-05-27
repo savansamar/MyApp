@@ -42,20 +42,16 @@ const Main = () => {
     let props={url:urls}
 
     const response=(res:any)=>{
-      if(res?.status===404){
-        console.log("scuess",res)
-        setError(res.message)
-        setIsLoading(false)
-      }
-      else{
-        
       setIsLoading(false)
-      navigation.navigate('Country',{item:res})
-      }
+        if(res.name==='SyntaxError'){
+          setError("Id is not valid.")
+        }
+        else{
+          setInfo(res)
+        }
     }
 
     const error=(e:any)=>{
-      console.log("err=",e)
       setIsLoading(false)
       setId('')
       setError(false)
@@ -66,36 +62,37 @@ const Main = () => {
     .catch(res=>error(res))
   }
   
-  // const getRandomId=()=>{
-  //   setInfo('')
-  //   setId('')
-  //   setError(false)
-  //   let urls:string="https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=OjB8w0fD7qKVIFmWlG3t13SvDmpowX1JLzP3iqxg"
-  //   setIsLoading(true)
-  //   let props={url:urls}
+  const getRandomId=()=>{
+    setInfo('')
+    setId('')
+    setError(false)
+    let urls:string="https://api.nasa.gov/neo/rest/v1/neo/browse?api_key=OjB8w0fD7qKVIFmWlG3t13SvDmpowX1JLzP3iqxg"
+    setIsLoading(true)
+    let props={url:urls}
 
 
-  //   const response=(res:any)=>{
-  //     setIsLoading(false)
-  //     let no= Math.floor(Math.random()*res.page.size)
-  //     setId(res.near_earth_objects[no].id)
-  //     setDisable(res.near_earth_objects[no].id.length>0?false:true)
-  //   }
+    const response=(res:any)=>{
+      setIsLoading(false)
+      let no= Math.floor(Math.random()*res.page.size)
+      setId(res.near_earth_objects[no].id)
+      setDisable(res.near_earth_objects[no].id.length>0?false:true)
+    }
 
-  //   const error=(e:any)=>{
-  //     setIsLoading(false)
-  //     setId('')
-  //   }
+    const error=(e:any)=>{
+      setIsLoading(false)
+      setId('')
+    }
 
-  //   getApi(props)
-  //   .then(res=>response(res))
-  //   .catch(res=>error(res))
-  // }
+    getApi(props)
+    .then(res=>response(res))
+    .catch(res=>error(res))
+  }
 
   
 
   const onSubmit=()=>{
-    let url =`https://restcountries.com/v2/name/${id}`
+    let url =`https://api.nasa.gov/neo/rest/v1/neo/${id}?api_key=OjB8w0fD7qKVIFmWlG3t13SvDmpowX1JLzP3iqxg`
+    console.log("URl_",url)
     callGetApi(url)
   } 
 
@@ -130,9 +127,21 @@ const onChangeText=(e:any)=>{
         name='Submit' 
         onClick={onSubmit} 
       />
-       {/* <Button  color="#21D639" name='Random' onClick={getRandomId} /> */}
+       <Button  color="#21D639" name='Random' onClick={getRandomId} />
       </View>
     
+         {
+           (!!id &&!!Info )
+           &&
+           <View style={styles.infoView}>
+            <Text>Name : {Info?.name} </Text>
+            <View style={styles.row}>
+                <Text>Nasa Jpl Url : </Text>
+                <Text>{Info?.nasa_jpl_url} </Text>
+            </View>
+            <Text>Is Potentially Hazardous Asteriod : {(Info?.is_potentially_hazardous_asteroid)?'Yes':"No"} </Text>
+         </View>
+         }
       </View>
     </SafeAreaView>
   )
