@@ -23,6 +23,7 @@ const MemorizedPost = React.memo((props:Props) => {
       <View>
         <FlatList
             data={props.data}
+            style={{marginTop:20}}
             renderItem={_renderItem}
             contentContainerStyle={styles.contentContainerStyle}
             numColumns={2}

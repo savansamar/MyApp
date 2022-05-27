@@ -19,11 +19,18 @@ const ImageBox=(props:imgProps)=>{
 
 interface TextInputBox {
   children?:React.ReactNode,
-  containerWidth?:string|number
+  containerWidth?:string|number,
+  leftIcon?:string,
+  rightIon?:string,
+  title?:string,
+  error?:string,
+  onChangeText?:(e:any)=>void,
+  value:string,
+  container?:any
 }
 
 
-const UseTextInput:React.FC<TextInputBox> = (props) => {
+const UseTextInput:React.FC<TextInputBox> = React.memo((props) => {
 
   const [icon,setIcon]=React.useState<string>('')
 
@@ -33,50 +40,59 @@ const UseTextInput:React.FC<TextInputBox> = (props) => {
   .then(json =>setIcon(json.thumbnailUrl))
   },[])
 
-const onClickImage=()=>{
-    
-}
 
   return (
-    <View style={{...styles.column}}>
-      <Text>Title</Text>
+    <View style={{...styles.column,...props.container}}>
+      {props.title && <Text>Title</Text>}
+
       <View style={styles.row}>
-       <ImageBox icon={icon} callBack={(e:Array<string>)=>console.log("e",e)} />
-        <TextInput 
-          style={styles.textInput}
-          value=""
-        />
-       <ImageBox icon={icon} callBack={(e:Array<string>)=>console.log("e",e)} />
+      
+      {props.leftIcon && <ImageBox icon={icon} callBack={(e:Array<string>)=>console.log("e",e)} />}
+      
+        <View style={styles.section}>
+          <TextInput 
+            style={styles.textInput}
+            value={props.value}
+            onChangeText={props.onChangeText}
+          />
+        </View>
+      
+       {props.rightIon &&<ImageBox icon={icon} callBack={(e:Array<string>)=>console.log("e",e)} />}
+      
       </View>
-      <Text>Error</Text>
+      {props.error &&  <Text style={{color:"red",fontSize:12,marginLeft:5}} >{props?.error}</Text>}
     </View>
   )
-}
+})
 
 export default UseTextInput
 
 const styles = StyleSheet.create({
+
+  section:{
+    flex:1,
+    overflow:"hidden"
+  },
+
   textInput:{
     height:height*0.05,
-    flexWrap:"wrap",
-    flexGrow:1,
-    maxWidth:'85%',
+    paddingHorizontal:5
   },
 
 
 
   column:{
     backgroundColor:'white',
-    width:"90%",
-    alignSelf:"center"
+    height:height*0.05,
   },
   row:{
     flexDirection:'row',
-    borderWidth:1,
+    borderWidth:0.3,
     alignItems:"center",
     backgroundColor:"white",
     borderRadius:10,
-    width:"100%"
+    overflow:"hidden"
+    //width:"100%",
   },
   img:{
       borderRadius:10,
